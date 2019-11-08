@@ -9,6 +9,7 @@ import {
   Image,
   ImageBackground,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -118,8 +119,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: theme.colors.white,
     paddingHorizontal: theme.sizes.padding,
-    paddingTop: theme.sizes.padding * 1.33,
-    paddingBottom: theme.sizes.padding * 0.66,
+    paddingVertical: theme.sizes.padding / 2,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -183,6 +183,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.05,
     shadowRadius: 10,
+    elevation: 2,
   },
   dots: {
     width: 10,
@@ -206,21 +207,23 @@ class Articles extends Component {
 
   static navigationOptions = {
     header: (
-      <View style={[styles.flex, styles.row, styles.header]}>
-        <View>
-          <Text style={{color: theme.colors.caption}}>Search for place</Text>
-          <Text style={{fontSize: theme.sizes.font * 2}}>Destination</Text>
+      <SafeAreaView style={{backgroundColor: theme.colors.white}}>
+        <View style={[styles.row, styles.header]}>
+          <View>
+            <Text style={{color: theme.colors.caption}}>Search for place</Text>
+            <Text style={{fontSize: theme.sizes.font * 2}}>Destination</Text>
+          </View>
+          <View>
+            <Image
+              style={styles.avatar}
+              source={{
+                uri:
+                  'https://pbs.twimg.com/profile_images/883458234685587456/KtCFjlD4.jpg',
+              }}
+            />
+          </View>
         </View>
-        <View>
-          <Image
-            style={styles.avatar}
-            source={{
-              uri:
-                'https://pbs.twimg.com/profile_images/883458234685587456/KtCFjlD4.jpg',
-            }}
-          />
-        </View>
-      </View>
+      </SafeAreaView>
     ),
   };
 
@@ -235,7 +238,7 @@ class Articles extends Component {
           {
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: theme.sizes.margin * 2,
+            marginTop: theme.sizes.margin,
           },
         ]}>
         {destinations.map((item, index) => {
@@ -257,7 +260,7 @@ class Articles extends Component {
 
   renderDestinations = () => {
     return (
-      <View style={[styles.column, styles.destinations]}>
+      <View>
         <FlatList
           horizontal
           pagingEnabled
@@ -282,44 +285,50 @@ class Articles extends Component {
 
   renderDestination = item => {
     return (
-      <ImageBackground
-        style={[styles.flex, styles.destination, styles.shadow]}
-        imageStyle={{borderRadius: theme.sizes.radius}}
-        source={{uri: item.preview}}>
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
-          <View style={{flex: 0}}>
-            <Image source={{uri: item.user.avatar}} style={styles.avatar} />
+      <View style={{width, paddingBottom: theme.sizes.padding + 5}}>
+        <ImageBackground
+          style={[styles.destination, styles.shadow]}
+          imageStyle={{borderRadius: theme.sizes.radius}}
+          source={{uri: item.preview}}>
+          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+            <View style={{flex: 0}}>
+              <Image source={{uri: item.user.avatar}} style={styles.avatar} />
+            </View>
+            <View
+              style={[
+                styles.column,
+                {flex: 2, paddingHorizontal: theme.sizes.padding / 2},
+              ]}>
+              <Text style={{color: theme.colors.white, fontWeight: 'bold'}}>
+                {item.user.name}
+              </Text>
+              <Text style={{color: theme.colors.white}}>{item.location}</Text>
+            </View>
+            <View
+              style={{
+                flex: 0,
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.rating}>{item.rating}</Text>
+            </View>
           </View>
-          <View
-            style={[
-              styles.column,
-              {flex: 2, paddingHorizontal: theme.sizes.padding / 2},
-            ]}>
-            <Text style={{color: theme.colors.white, fontWeight: 'bold'}}>
-              {item.user.name}
+          <View style={[styles.column, styles.destinationInfo, styles.shadow]}>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: theme.sizes.font * 1.28,
+                fontWeight: '500',
+                paddingBottom: 8,
+              }}>
+              {item.title}
             </Text>
-            <Text style={{color: theme.colors.white}}>{item.location}</Text>
+            <Text style={{color: theme.colors.caption}} numberOfLines={2}>
+              {item.description}
+            </Text>
           </View>
-          <View
-            style={{flex: 0, justifyContent: 'center', alignItems: 'flex-end'}}>
-            <Text style={styles.rating}>{item.rating}</Text>
-          </View>
-        </View>
-        <View style={[styles.column, styles.destinationInfo, styles.shadow]}>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize: theme.sizes.font * 1.28,
-              fontWeight: '500',
-              paddingBottom: 8,
-            }}>
-            {item.title}
-          </Text>
-          <Text style={{color: theme.colors.caption}} numberOfLines={2}>
-            {item.description}
-          </Text>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </View>
     );
   };
 
@@ -380,7 +389,11 @@ class Articles extends Component {
             imageStyle={{borderTopLeftRadius: 12, borderTopRightRadius: 12}}
             source={{uri: item.preview}}>
             <Text style={{color: theme.colors.white}}>{item.temperature}℃</Text>
-            <Icon name='bookmark' size={theme.sizes.font} color={theme.colors.white} />
+            <Icon
+              name="bookmark"
+              size={theme.sizes.font}
+              color={theme.colors.white}
+            />
             <Text style={{color: theme.colors.white}} />
           </ImageBackground>
         </View>
